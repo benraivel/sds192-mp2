@@ -1,6 +1,6 @@
 ---
 title: "Mini-Project 2"
-author: "Your Name Here"
+author: "Ben Raivel, Jordy Perry Greene, Ben Moss-Horwitz"
 date: "2019-03-24"
 output: 
   html_document:
