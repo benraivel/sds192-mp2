@@ -28,10 +28,15 @@ candidates <- candidates %>%
 ```
 
 ```{r}
+
+```
+
+```{r}
 theFinalSet <- candidates %>%
   inner_join(house_elections, by = "fec_id") %>%
   select(fec_id, candidate_name, cand_party_affiliation, cand_office_state, incumbent, primary_votes, general_votes, ge_winner) %>%
-  filter(primary_votes > 0)
+  filter(primary_votes > 0) %>%
+  filter(general_votes != 0)
 contributionData <- contributions %>%
   select(cand_id, transaction_amt) %>%
   group_by(cand_id) %>%
@@ -39,13 +44,16 @@ contributionData <- contributions %>%
   filter(number != 0)
 contributionData <- contributionData %>%
   rename("fec_id" = cand_id)
+
 theFinalSet <- theFinalSet %>%
   inner_join(contributionData, by = "fec_id")
   
 ```
 
 ```{r}
-ggplot
+theFinalSet %>%
+  ggplot(aes(x = total, y = primary_votes)) +
+  geom_point()
 ```
 
 
