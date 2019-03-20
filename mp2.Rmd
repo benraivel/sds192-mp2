@@ -52,8 +52,8 @@ theFinalSet <- theFinalSet %>%
 
 ```{r}
 theFinalSet %>%
-  ggplot(aes(x = total, y = primary_votes)) +
-  geom_point()
+  ggplot(aes(x = total, y = general_votes)) +
+  geom_point(aes(color = incumbent))
 ```
 
 
