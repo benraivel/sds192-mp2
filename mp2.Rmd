@@ -13,7 +13,7 @@ output:
 This project is so interesting and relevant to my life!
 
 ```{r, message=FALSE}
-#Ooh ee ooh ah ah ting tang walla walla bing bang
+#Ooh ee ooh ah ah ting tang walla walla bing bang 123
 library(tidyverse)
 load("house_elections.rda")
 load("candidates.rda")
@@ -21,4 +21,18 @@ load("committees.rda")
 load("contributions.rda")
 ```
 
+
+```{r}
+candidates <- candidates %>%
+  rename("fec_id" = cand_id)
+
+#candRenamed <- rename(candidates, replace = c("cand_id" = "fec_id"))
+#candRenamed
+
+#theFinalSet <-
+#  inner_join(candidates, house_elections, by = )
+```
+
+<!--
 > Word count: `r wordcountaddin::word_count()`
+--!>
