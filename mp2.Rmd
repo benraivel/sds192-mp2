@@ -25,10 +25,14 @@ load("contributions.rda")
 ```{r}
 candidates <- candidates %>%
   rename("fec_id" = cand_id)
+theFinalSet <- candidates %>%
+  inner_join(house_elections, by = "fec_id")
+```
 
-#candRenamed <- rename(candidates, replace = c("cand_id" = "fec_id"))
-#candRenamed
-
+```{r}
+########################
+#THIS IS THE CURRENT ONE 
+########################
 #theFinalSet <-
 #  inner_join(candidates, house_elections, by = )
 ```
