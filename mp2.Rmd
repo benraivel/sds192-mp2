@@ -48,9 +48,22 @@ theFinalSet <- theFinalSet %>%
 
 ```{r, message = FALSE}
 theFinalSet %>%
-  ggplot(aes(x = total, y = general_votes)) +
-  geom_point(aes(color = incumbent, alpha = 0.5)) +
-  scale_x_continuous(trans='log2')
+  ggplot(aes(x = total, y = general_votes, color = ge_winner)) +
+  geom_point(aes(alpha = 0.5)) +
+  #scale_x_continuous(trans='log2') + 
+  geom_smooth() +
+  facet_wrap("incumbent")
+```
+
+```{r, message = FALSE}
+theFinalSet %>%
+  ggplot(aes(y = general_votes, x = total)) +
+  geom_smooth() +
+  geom_point(aes(alpha = 0.5, color = ge_winner)) +
+  scale_x_continuous(trans='log2') + 
+  facet_wrap("incumbent") + 
+  xlab("Total Contributions") + 
+  ylab("Total Votes")
 ```
 
 
