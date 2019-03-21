@@ -4,7 +4,7 @@ author: "Ben Raivel, Jordy Perry Greene, Ben Moss-Horwitz"
 date: "2019-03-24"
 output: 
   html_document:
-    code_folding: show
+    code_folding: hide
 ---
 
 
@@ -12,7 +12,7 @@ output:
 
 This project is so interesting and relevant to my life!
 
-```{r, message=FALSE}
+```{r, message = FALSE}
 #Ooh ee ooh ah ah ting tang walla walla bing bang 123
 library(tidyverse)
 load("house_elections.rda")
@@ -22,16 +22,12 @@ load("contributions.rda")
 ```
 
 
-```{r}
+```{r, message = FALSE}
 candidates <- candidates %>%
   rename("fec_id" = cand_id)
 ```
 
-```{r}
-
-```
-
-```{r}
+```{r, message = FALSE}
 theFinalSet <- candidates %>%
   inner_join(house_elections, by = "fec_id") %>%
   select(fec_id, candidate_name, cand_party_affiliation, cand_office_state, incumbent, primary_votes, general_votes, ge_winner) %>%
@@ -50,10 +46,11 @@ theFinalSet <- theFinalSet %>%
   
 ```
 
-```{r}
+```{r, message = FALSE}
 theFinalSet %>%
   ggplot(aes(x = total, y = general_votes)) +
-  geom_point(aes(color = incumbent))
+  geom_point(aes(color = incumbent, alpha = 0.5)) +
+  scale_x_continuous(trans='log2')
 ```
 
 
