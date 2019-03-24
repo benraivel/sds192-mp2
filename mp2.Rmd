@@ -11,6 +11,16 @@ output:
 ## Loading the data
 
 
+##################
+WHAT WE NEED TO DO
+##################
+-Fold code
+-Annotate
+-Write analysis
+-Write single-sentence analysis overview
+-"providing context or background useful in interpreting the graphic"
+-Make graph look pretty
+
 
 ```{r, message = FALSE}
 #Ooh ee ooh ah ah ting tang walla walla bing bang 123
@@ -74,3 +84,5 @@ theFinalSet %>%
   xlab("Total Contributions") + 
   ylab("Total Votes")
 ```
+Github Repository Link:
+https://github.com/benraivel/sds192-mp2
