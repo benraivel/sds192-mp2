@@ -14,7 +14,7 @@ output:
 ##################
 WHAT WE NEED TO DO
 ##################
--Fold code
+-Fold code ## Done? ##
 -Annotate
 -Write analysis
 -Write single-sentence analysis overview
@@ -23,17 +23,18 @@ WHAT WE NEED TO DO
 
 
 ```{r, message = FALSE}
-#Ooh ee ooh ah ah ting tang walla walla bing bang 123
+#This is our setup block, where we initialize everything
+
+#we first get tidyverse
 library(tidyverse)
+
+#and then load in all of our data
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
-```
-ME AND YOU CAN RULE THIS CITY SPIDERMAN!
 
-
-```{r, message = FALSE}
+#finally, to help with our join, we rename the ID column in candidates to match that of house_elections
 candidates <- candidates %>%
   rename("fec_id" = cand_id)
 ```
@@ -41,23 +42,37 @@ candidates <- candidates %>%
 ```{r, message = FALSE}
 theFinalSet <- candidates %>%
   inner_join(house_elections, by = "fec_id") %>%
-  select(fec_id, candidate_name, cand_party_affiliation, cand_office_state, incumbent, primary_votes, general_votes, ge_winner) %>%
-  filter(primary_votes > 0) %>%
-  filter(general_votes != 0)
-contributionData <- contributions %>%
+  select(fec_id, incumbent, ge_winner)
+
+
+contributionPositives <- contributions %>%
   select(cand_id, transaction_amt) %>%
+  filter(transaction_amt > 0) %>%
   group_by(cand_id) %>%
-  summarize(total = sum(transaction_amt), avg = mean(transaction_amt), number = n()) %>%
-  filter(number != 0)
-contributionData <- contributionData %>%
+  summarize(totalPos = sum(transaction_amt), avgPos = mean(transaction_amt), numberPos = n()) %>%
+  filter(numberPos != 0)
+contributionPositives <- contributionPositives %>%
+  rename("fec_id" = cand_id)
+
+contributionNegatives <- contributions %>%
+  select(cand_id, transaction_amt) %>%
+  filter(transaction_amt < 0) %>%
+  group_by(cand_id) %>%
+  summarize(totalNeg = sum(transaction_amt), avgNeg = mean(transaction_amt), numberNeg = n())
+contributionNegatives <- contributionNegatives %>%
   rename("fec_id" = cand_id)
 
 theFinalSet <- theFinalSet %>%
-  inner_join(contributionData, by = "fec_id")
+  inner_join(contributionPositives, by = "fec_id")
+
+theFinalSet <- theFinalSet %>%
+  left_join(contributionNegatives, by = "fec_id")
+
+theFinalSet[is.na(theFinalSet)] <- 0
 
 testSet <- theFinalSet %>%
   group_by(incumbent, ge_winner) %>%
-  summarise(money = mean(total))
+  summarise(money = mean(totalPos))
 
 testSet %>%
   ggplot(aes(x = ge_winner, y = money, fill = ge_winner)) +
@@ -68,7 +83,7 @@ testSet %>%
 
 ```{r, message = FALSE}
 theFinalSet %>%
-  ggplot(aes(x = total, y = general_votes, color = ge_winner)) +
+  ggplot(aes(x = totalPos, y = general_votes, color = ge_winner)) +
   geom_point(aes(alpha = 0.5)) +
   #scale_x_continuous(trans='log2') + 
   geom_smooth() +
@@ -77,7 +92,7 @@ theFinalSet %>%
 
 ```{r, message = FALSE}
 theFinalSet %>%
-  ggplot(aes(y = general_votes, x = total)) +
+  ggplot(aes(y = general_votes, x = totalPos)) +
   geom_point(aes(alpha = 0.5, color = ge_winner)) +
   scale_x_continuous(trans='log2') + 
   facet_wrap("incumbent") + 
