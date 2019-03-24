@@ -23,16 +23,13 @@ WHAT WE NEED TO DO
 
 ```{r, message = FALSE}
 #This is our setup block, where we initialize everything
-
 #we first get tidyverse
 library(tidyverse)
-
 #and then load in all of our data
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
-
 #finally, to help with our join, we rename the ID column in candidates to match that of house_elections
 candidates <- candidates %>%
   rename("fec_id" = cand_id)
@@ -45,7 +42,6 @@ usefulData <- candidates %>%
   inner_join(house_elections, by = "fec_id") %>%
   #and select only the useful columns
   select(fec_id, incumbent, ge_winner)
-
 #setting up our data set for positive contributions
 contributionPositives <- contributions %>%
   #we select only the useful columns
@@ -57,48 +53,51 @@ contributionPositives <- contributions %>%
   summarize(totalPos = sum(transaction_amt), avgPos = mean(transaction_amt), numberPos = n()) %>%
   #only take canadates with any contriubitons, because those will be the people we are looking at
   filter(numberPos != 0)
-
 #finally, we rename to prepare for a join
 contributionPositives <- contributionPositives %>%
   rename("fec_id" = cand_id)
-
 #this is the same as above, but for negative contributions only. The only difference is that we don't want to get rid of people without any negative contributions, because if they have positive contributions they will still be useful to our data
 contributionNegatives <- contributions %>%
   select(cand_id, transaction_amt) %>%
   filter(transaction_amt < 0) %>%
   group_by(cand_id) %>%
   summarize(totalNeg = sum(transaction_amt), avgNeg = mean(transaction_amt), numberNeg = n())
-
 #and rename for the join
 contributionNegatives <- contributionNegatives %>%
   rename("fec_id" = cand_id)
-
 #now we join the positives to our final set
 usefulData <- usefulData %>%
   inner_join(contributionPositives, by = "fec_id")
-
 #and join the negatives
 usefulData <- usefulData %>%
   left_join(contributionNegatives, by = "fec_id")
-
 #we replace all the NAs from the people who had positive contributions but no negative contributions with zeroes, so that it doesn't break our graph
 usefulData[is.na(usefulData)] <- 0
-
 #now we create our final data set, which averages the contributions among ALL candidates
 finalSet <- usefulData %>%
   group_by(incumbent, ge_winner) %>%
   summarise(money = mean(totalPos))
+```
 
+```{r}
 finalSet %>%
   ggplot(aes(x = ge_winner, y = money, fill = ge_winner)) +
-  geom_col()+
+  theme(panel.background = element_rect(fill = 'white')) +
+  ggtitle("Money spent on elections for incumbent vs nonincumbent") +
+  geom_col() +
   facet_wrap("incumbent")
+```
+
+```{r}
 finalSet <- usefulData %>%
   group_by(incumbent, ge_winner) %>%
   summarise(moneyNeg = mean(totalNeg))
+```
 
+```{r}
 finalSet %>%
   ggplot(aes(x = ge_winner, y = moneyNeg, fill = ge_winner)) +
+  
   geom_col()+
   facet_wrap("incumbent")
 ```
