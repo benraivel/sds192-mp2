@@ -14,7 +14,6 @@ output:
 ##################
 WHAT WE NEED TO DO
 ##################
--Fold code ## Done? ##
 -Annotate
 -Write analysis
 -Write single-sentence analysis overview
@@ -94,26 +93,15 @@ finalSet %>%
   ggplot(aes(x = ge_winner, y = money, fill = ge_winner)) +
   geom_col()+
   facet_wrap("incumbent")
-  
-```
+finalSet <- usefulData %>%
+  group_by(incumbent, ge_winner) %>%
+  summarise(moneyNeg = mean(totalNeg))
 
-```{r, message = FALSE}
-usefulData %>%
-  ggplot(aes(x = totalPos, y = general_votes, color = ge_winner)) +
-  geom_point(aes(alpha = 0.5)) +
-  #scale_x_continuous(trans='log2') + 
-  geom_smooth() +
+finalSet %>%
+  ggplot(aes(x = ge_winner, y = moneyNeg, fill = ge_winner)) +
+  geom_col()+
   facet_wrap("incumbent")
 ```
 
-```{r, message = FALSE}
-usefulData %>%
-  ggplot(aes(y = general_votes, x = totalPos)) +
-  geom_point(aes(alpha = 0.5, color = ge_winner)) +
-  scale_x_continuous(trans='log2') + 
-  facet_wrap("incumbent") + 
-  xlab("Total Contributions") + 
-  ylab("Total Votes")
-```
 Github Repository Link:
 https://github.com/benraivel/sds192-mp2
