@@ -88,17 +88,27 @@ usefulData[is.na(usefulData)] <- 0
 finalSet <- usefulData %>%
   group_by(incumbent, ge_winner) %>%
   summarise(money = mean(totalPos))
+```
 
+```{r}
 finalSet %>%
   ggplot(aes(x = ge_winner, y = money, fill = ge_winner)) +
-  geom_col()+
+  theme(panel.background = element_rect(fill = 'white')) +
+  ggtitle("Money spent on elections for incumbent vs nonincumbent") +
+  geom_col() +
   facet_wrap("incumbent")
+```
+
+```{r}
 finalSet <- usefulData %>%
   group_by(incumbent, ge_winner) %>%
   summarise(moneyNeg = mean(totalNeg))
+```
 
+```{r}
 finalSet %>%
   ggplot(aes(x = ge_winner, y = moneyNeg, fill = ge_winner)) +
+  
   geom_col()+
   facet_wrap("incumbent")
 ```
