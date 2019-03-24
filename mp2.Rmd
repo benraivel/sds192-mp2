@@ -80,12 +80,16 @@ finalSet <- usefulData %>%
 ```
 
 ```{r}
+labels <- c("FALSE" = "Challengers", "TRUE" = "Incumbent")
 finalSet %>%
   ggplot(aes(x = ge_winner, y = money, fill = ge_winner)) +
-  theme(panel.background = element_rect(fill = 'white')) +
-  ggtitle("Money spent on elections for incumbent vs nonincumbent") +
+  theme(panel.background = element_rect(fill = 'white'), legend.title = element_blank()) +
+  ggtitle("Money spent on elections for incumbents vs challengers") +
   geom_col() +
-  facet_wrap("incumbent")
+  scale_fill_manual(values = c("#a84521", "#20a866")) +
+  facet_wrap("incumbent", labeller = labeller(incumbent = labels))+
+  scale_y_continuous(limits=c(0,3000000), name = "Total positive contributions", breaks = c(0,1000000,2000000,3000000), labels = c("$0", "$1m", "$2m","$3m")) +
+  scale_x_discrete(name = "", labels = c("Lost", "Won"))
 ```
 
 ```{r}
