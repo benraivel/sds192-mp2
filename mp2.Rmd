@@ -77,33 +77,37 @@ usefulData[is.na(usefulData)] <- 0
 finalSet <- usefulData %>%
   group_by(incumbent, ge_winner) %>%
   summarise(money = mean(totalPos))
-```
 
-```{r}
-labels <- c("FALSE" = "Challengers", "TRUE" = "Incumbent")
-finalSet %>%
-  ggplot(aes(x = ge_winner, y = money, fill = ge_winner)) +
-  theme(panel.background = element_rect(fill = 'white'), legend.title = element_blank()) +
-  ggtitle("Money spent on elections for incumbents vs challengers") +
-  geom_col() +
-  scale_fill_manual(values = c("#a84521", "#20a866")) +
-  facet_wrap("incumbent", labeller = labeller(incumbent = labels))+
-  scale_y_continuous(limits=c(0,3000000), name = "Total positive contributions", breaks = c(0,1000000,2000000,3000000), labels = c("$0", "$1m", "$2m","$3m")) +
-  scale_x_discrete(name = "", labels = c("Lost", "Won"))
-```
-
-```{r}
-finalSet <- usefulData %>%
+finalNegSet <- usefulData %>%
   group_by(incumbent, ge_winner) %>%
   summarise(moneyNeg = mean(totalNeg))
 ```
 
 ```{r}
+#This Code creates the first plot
+labels <- c("FALSE" = "Challenger", "TRUE" = "Incumbent")
 finalSet %>%
+  ggplot(aes(x = ge_winner, y = money, fill = ge_winner)) +
+  theme(panel.background = element_rect(fill = 'white'), legend.title = element_blank()) +
+  ggtitle("Average total positive donations to elections for incumbents vs challengers") +
+  geom_col() +
+  scale_fill_manual(values = c("#a84521", "#20a866")) +
+  facet_wrap("incumbent", labeller = labeller(incumbent = labels)) +
+  scale_y_continuous(limits=c(0,3000000), name = "Total positive contributions", breaks = c(0,1000000,2000000,3000000), labels = c("$0", "$1m", "$2m","$3m")) +
+  scale_x_discrete(name = "", labels = c("Lost", "Won")) +
+  guides(fill = FALSE)
+
+#This code creates the second plot
+finalNegSet %>%
   ggplot(aes(x = ge_winner, y = moneyNeg, fill = ge_winner)) +
-  
+  theme(panel.background = element_rect(fill = 'white'), legend.title = element_blank()) +
+  ggtitle("Average total negative donations to elections for incumbents vs challengers") +
   geom_col()+
-  facet_wrap("incumbent")
+  scale_fill_manual(values = c("#a84521", "#20a866")) +
+  facet_wrap("incumbent", labeller = labeller(incumbent = labels)) +
+  scale_y_continuous(name = "Total negative contributions", breaks = c(0,-10000,-20000,-30000), labels = c("$0", "-$10,000", "-$20,000","-$30,000")) +
+  scale_x_discrete(name = "", labels = c("Lost", "Won")) +
+  guides(fill = FALSE)
 ```
 
 Github Repository Link:
