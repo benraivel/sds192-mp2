@@ -8,17 +8,8 @@ output:
 ---
 
 
-## Loading the data
 
-
-##################
-WHAT WE NEED TO DO
-##################
--Annotate
--Write analysis
--Write single-sentence analysis overview
--"providing context or background useful in interpreting the graphic"
--Make graph look pretty
+This data can be used to show the relationship between a whether or not a candidate is an incumbent, and how that affects the amount of money they raise and the outcome of the election.
 
 
 ```{r, message = FALSE}
@@ -89,11 +80,11 @@ labels <- c("FALSE" = "Challenger", "TRUE" = "Incumbent")
 finalSet %>%
   ggplot(aes(x = ge_winner, y = money, fill = ge_winner)) +
   theme(panel.background = element_rect(fill = 'white'), legend.title = element_blank()) +
-  ggtitle("Average total positive donations to elections for incumbents vs challengers") +
+  ggtitle("Average Total Positive Campaign Donations for Incumbents vs Challengers") +
   geom_col() +
   scale_fill_manual(values = c("#a84521", "#20a866")) +
   facet_wrap("incumbent", labeller = labeller(incumbent = labels)) +
-  scale_y_continuous(limits=c(0,3000000), name = "Total positive contributions", breaks = c(0,1000000,2000000,3000000), labels = c("$0", "$1m", "$2m","$3m")) +
+  scale_y_continuous(limits=c(0,3000000), name = "Average Total Positive Contributions", breaks = c(0,1000000,2000000,3000000), labels = c("$0", "$1m", "$2m","$3m")) +
   scale_x_discrete(name = "", labels = c("Lost", "Won")) +
   guides(fill = FALSE)
 
@@ -101,14 +92,26 @@ finalSet %>%
 finalNegSet %>%
   ggplot(aes(x = ge_winner, y = moneyNeg, fill = ge_winner)) +
   theme(panel.background = element_rect(fill = 'white'), legend.title = element_blank()) +
-  ggtitle("Average total negative donations to elections for incumbents vs challengers") +
+  ggtitle("Average Total Negative Campaign Donations for Incumbents vs Challengers") +
   geom_col()+
   scale_fill_manual(values = c("#a84521", "#20a866")) +
   facet_wrap("incumbent", labeller = labeller(incumbent = labels)) +
-  scale_y_continuous(name = "Total negative contributions", breaks = c(0,-10000,-20000,-30000), labels = c("$0", "-$10,000", "-$20,000","-$30,000")) +
+  scale_y_continuous(name = "Average Total Negative Contributions", breaks = c(0,-10000,-20000,-30000), labels = c("$0", "-$10,000", "-$20,000","-$30,000")) +
   scale_x_discrete(name = "", labels = c("Lost", "Won")) +
   guides(fill = FALSE)
 ```
+
+
+In this mini-project, we examine the effect of a candidate's position as either an incumbent or a new challenger on the results of the House of Representatives elections in 2012. This race coincided with the reelection of another Democratic president, as President Obama easily edged out Republican nominee Mitt Romney, but resulted in the Republican party maintaining a majority by 17 seats. Pundits have accredited this to the trend of more Republican candidates being incumbents - who face less challenges raising funds for a major election. They also come into any election with name recognition and trust. 	
+
+We took our data from the Federal Elections Commission database which chronicles all contributions and expenditures to and from all elections in the United States. We created a table, using the “elections” and “contributions” open source packages, that display all positive and negative contributions to a house race during the 2012 election for the House of Representatives of the 113th Congress. 
+
+Graph 1 displays the average positive campaign contributions for successful and unsuccessful incumbents and challengers. Incumbents are located in the box to the right, challengers are located to the left. When we look at the challengers, one first initial observation is that the non-incumbent winners raised more money than non-incumbent losers. This is intuitive, a lot of money is required to win an election, but what’s interesting is that this pattern did not hold up for incumbents. Failed incumbents, raised wildly more than incumbents who won. In fact, they raised more on average than any other category. This suggests that the relationship between money and chances at winning is reversed for incumbents. The more money a challenger raises, the higher their chance of success, but the lower the chances for an incumbent to win, the more money they raise. It makes sense that if the election looks close, incumbents will try to raise as much money as possible to guarantee victory, but if a win seems inevitable they will relax their fundraising efforts.  Overall, the data suggests that incumbent winners needed far less money to win than their non-incumbent counterparts. 
+
+Graph 2 displays the same relationship as graph 1, but instead of positive campaign contributions, it shows negative contributions. The first thing to notice is that the mean negative contributions are generally much lower than positive contributions. On average only \$873 dollars is spent against challengers who lose in the general election, a paltry amount when you consider that their average total positive contributions amount to $193,730. This does make sense however, many of these candidates have a miniscule chance at winning the general election, so there is no point in the opposition wasting money on attack ads. Interestingly, unlike with positive contributions, more money is spent against incumbents regardless of whether they win or lose. 
+
+Overall this data illustrates interesting relationships between incumbency and fundraising, and how both of these factors affect a candidate's chance at winning an election. It also shows how a candidates chances at winning an election can have a huge impact on the amount of money they raise.
+
 
 Github Repository Link:
 https://github.com/benraivel/sds192-mp2
